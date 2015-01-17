@@ -1,0 +1,1 @@
+1/16/2015 - Inital Version works, produces output as expected. Double-checked number of solutions, everything looks good.

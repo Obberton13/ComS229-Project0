@@ -1,33 +1,39 @@
 #include<stdio.h>
 
-typedef struct Vector2
-{
-	int x, y;
-}Vector2;
-
 //function declarations
 void InitBoard(int xMax, int yMax);
 int IsOnBoard(int x, int y);
-void Visit(struct Vector2 pos);
+void Visit(int x, int y);
+void UnVisit(int x, int y);
 void CalculatePaths(int x, int y);
-Vector2 NextToVisit(int x, int y);
+void PrintPath(void);
 
 int numVisited;
+int numSolutions;
 int board[5][5];
-Vector2 visitedStack[25];
+int visitedStackX[25];
+int visitedStackY[25];
 
-void main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
 	int xMax = 5, yMax = 5;
+	numVisited = 0;
+	numSolutions = 0;
 	InitBoard(xMax, yMax);
 	int x, y;
 	for(x=0;x<xMax;x++)
 	{
 		for(y=0; y<yMax; y++)
 		{
+			if(numVisited!=0)
+			{
+				numVisited = 0;
+			}
 			CalculatePaths(x, y);
 		}
 	}
+	printf("Solutions found: %d\n", numSolutions);
+	return 0;
 }
 
 void InitBoard(int xMax, int yMax)
@@ -54,32 +60,69 @@ int IsOnBoard(int x, int y)
 
 void CalculatePaths(int x, int y)
 {
-	int numVisited = 0;
-	Vector2 next;
-	next.x = x;
-	next.y = y;
-	while (numVisited<25)
+	Visit(x, y);
+	if(numVisited>=25)
 	{
-		next = NextToVisit(next.x, next.y);
-		Visit(next);
-		printf("%d: %d, %d. ", numVisited, next.x, next.y);
+		PrintPath();
+		UnVisit(x, y);
+		return;
 	}
-	printf("\n");
+	if(IsOnBoard(x+2,y+1)==1)
+	{
+		CalculatePaths(x+2, y+1);
+	}
+	if(IsOnBoard(x+2,y-1)==1)
+	{
+		CalculatePaths(x+2, y-1);
+	}
+	if(IsOnBoard(x-2,y+1)==1)
+	{
+		CalculatePaths(x-2,y+1);
+	}
+	if(IsOnBoard(x-2,y-1)==1)
+	{
+		CalculatePaths(x-2, y-1);
+	}
+	if(IsOnBoard(x+1,y+2)==1)
+	{
+		CalculatePaths(x+1, y+2);
+	}
+	if(IsOnBoard(x+1,y-2)==1)
+	{
+		CalculatePaths(x+1, y-2);
+	}
+	if(IsOnBoard(x-1,y+2)==1)
+	{
+		CalculatePaths(x-1, y+2);
+	}
+	if(IsOnBoard(x-1,y-2)==1)
+	{
+		CalculatePaths(x-1, y-2);
+	}
+	UnVisit(x,y);
 }
 
-Vector2 NextToVisit(int x, int y)
+void Visit(int x, int y)
 {
-	
-}
-
-void Visit(Vector2 pos)
-{
+	visitedStackY[numVisited]=y;
+	visitedStackX[numVisited]=x;
+	board[x][y] = 0;
 	numVisited++;
-	board[pos.x][pos.y] = 0;
 }
 
-void UnVisit(Vector2 pos)
+void UnVisit(int x, int y)
 {
+	board[x][y] = 1;
 	numVisited--;
-	oard[pos.x][pos.y] = 1;
+}
+
+void PrintPath()
+{
+	numSolutions++;
+	int i;
+	for(i=0;i<24;i++)
+	{
+		printf("%d, ", 5*visitedStackX[i]+visitedStackY[i]);
+	}
+	printf("%d\n", 5*visitedStackX[24]+visitedStackY[24]);
 }

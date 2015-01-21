@@ -5,3 +5,5 @@ Useful functions:
 	CalculatePaths(int x, int y) is the recursive function of the entire project. 
 		It checks for visited and out of bounds squares before visiting squares.
 	Visit() and UnVisit() are what help keep track of the order that the squares have been visited.
+
+IGNORE THIS LINE
